@@ -13,7 +13,7 @@ export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
   predictions.push({
     name: "L337 Time",
     occurringAt: nextL337,
-    description: "Elite o'clock - Hacker's favorite time"
+    description: "Elite o'clock - Hacker's favorite time",
   });
 
   // Predict next palindrome times (including seconds)

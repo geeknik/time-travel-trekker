@@ -7,6 +7,15 @@ interface UpcomingPatternsCardProps {
 }
 
 export function UpcomingPatternsCard({ patterns }: UpcomingPatternsCardProps) {
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('en-US', { 
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    });
+  };
+
   return (
     <TimeCard 
       title="Upcoming Patterns" 
@@ -18,7 +27,7 @@ export function UpcomingPatternsCard({ patterns }: UpcomingPatternsCardProps) {
           <div key={index} className="space-y-1">
             <div className="text-lg font-medium">{pattern.name}</div>
             <div className="text-muted-foreground">
-              {pattern.occurringAt.toLocaleTimeString()} - {pattern.description}
+              {formatTime(pattern.occurringAt)} - {pattern.description}
             </div>
           </div>
         ))}
