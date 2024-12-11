@@ -1,6 +1,24 @@
 import { TimeCard } from "@/components/TimeCard";
-import { Rocket, Sun, Moon, Timer, Infinity } from "lucide-react";
-import { LAGRANGE_POINTS, calculateLightTime, calculateMarsTime, calculatePlanckTimeProgress, calculateGPSTimeDilation, calculateInternetTime, calculateGalacticYearProgress } from "@/utils/cosmicCalculations";
+import { Clock, Timer, Binary, Globe, Rocket, Sun, Moon, Infinity } from "lucide-react";
+import {
+  LAGRANGE_POINTS,
+  calculateLightTime,
+  calculateMarsTime,
+  calculatePlanckTimeProgress,
+  calculateGPSTimeDilation,
+  calculateInternetTime,
+  calculateGalacticYearProgress
+} from "@/utils/cosmicCalculations";
+import {
+  calculateStardate,
+  calculateMetricTime,
+  calculateHexTime,
+  calculateSiderealTime,
+  calculateTimeDilation,
+  calculateUnixEpochProgress,
+  calculateDecimalTime,
+  calculateTimeZoneCrossings
+} from "@/utils/timeCalculations";
 
 interface CosmicTimeSectionProps {
   time: Date;
@@ -102,6 +120,80 @@ export function CosmicTimeSection({ time }: CosmicTimeSectionProps) {
             <div className="text-sm text-muted-foreground">Galactic Year Progress</div>
             <div className="font-space text-lg text-cyan-400">
               {calculateGalacticYearProgress(time)}%
+            </div>
+          </div>
+        </div>
+      </TimeCard>
+
+      <TimeCard title="Alternative Time Systems" icon={<Clock className="w-5 h-5" />}>
+        <div className="space-y-3 text-center">
+          <div>
+            <div className="text-sm text-muted-foreground">Stardate</div>
+            <div className="font-space text-lg text-yellow-400">
+              {calculateStardate(time)}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-muted-foreground">Metric Time</div>
+            <div className="font-space text-lg text-blue-400">
+              {calculateMetricTime(time)}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-muted-foreground">Decimal Time</div>
+            <div className="font-space text-lg text-green-400">
+              {calculateDecimalTime(time)}
+            </div>
+          </div>
+        </div>
+      </TimeCard>
+
+      <TimeCard title="Programmer's Time" icon={<Binary className="w-5 h-5" />}>
+        <div className="space-y-3 text-center">
+          <div>
+            <div className="text-sm text-muted-foreground">Hexadecimal Time</div>
+            <div className="font-space text-lg text-purple-400">
+              0x{calculateHexTime(time)}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-muted-foreground">Unix Epoch Progress</div>
+            <div className="w-full bg-accent rounded-full h-2 mt-2">
+              <div 
+                className="bg-orange-400 h-2 rounded-full transition-all duration-1000"
+                style={{ width: `${calculateUnixEpochProgress(time)}%` }}
+              />
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {calculateUnixEpochProgress(time).toFixed(2)}% until 32-bit overflow
+            </div>
+          </div>
+        </div>
+      </TimeCard>
+
+      <TimeCard title="Astronomical Time" icon={<Globe className="w-5 h-5" />}>
+        <div className="space-y-3 text-center">
+          <div>
+            <div className="text-sm text-muted-foreground">Sidereal Time</div>
+            <div className="font-space text-lg text-indigo-400">
+              {calculateSiderealTime(time)}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-muted-foreground">Time Zone Crossings</div>
+            <div className="font-space text-lg text-teal-400">
+              {calculateTimeZoneCrossings(time)} zones
+            </div>
+          </div>
+        </div>
+      </TimeCard>
+
+      <TimeCard title="Relativistic Effects" icon={<Infinity className="w-5 h-5" />}>
+        <div className="space-y-3 text-center">
+          <div>
+            <div className="text-sm text-muted-foreground">Time Dilation Factor</div>
+            <div className="font-space text-lg text-pink-400">
+              {calculateTimeDilation(time)}
             </div>
           </div>
         </div>
