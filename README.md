@@ -2,6 +2,8 @@
 
 An interactive web application that explores time across cosmic dimensions and mathematical patterns. Experience time through different perspectives, from Earth time to Mars time, and discover fascinating mathematical patterns in temporal sequences.
 
+Live Demo: https://cosmictime.app
+
 ## Features
 
 - **Cosmic Time Display**
@@ -35,7 +37,7 @@ An interactive web application that explores time across cosmic dimensions and m
 
 1. Clone the repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/geeknik/time-travel-trekker
 ```
 
 2. Install dependencies
