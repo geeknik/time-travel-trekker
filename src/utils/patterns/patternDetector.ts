@@ -42,13 +42,18 @@ export const detectPatterns = (date: Date): TimePattern[] => {
     patterns.push({ name: "Repeating Digits Time", timestamp: new Date() });
   }
 
-  // Sequential time (checking for continuous sequence like 12:34:56)
+  // Sequential time (checking for true sequential patterns like 12:34:56)
   const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  const timeDigits = timeStr.split('');
+  const digits = timeStr.split('');
   let isSequential = true;
   
-  for (let i = 0; i < timeDigits.length - 1; i++) {
-    if (parseInt(timeDigits[i + 1]) !== parseInt(timeDigits[i]) + 1) {
+  for (let i = 1; i < digits.length; i++) {
+    const current = parseInt(digits[i]);
+    const previous = parseInt(digits[i - 1]);
+    
+    // Check if the current digit is exactly one more than the previous
+    // or if previous is 9 and current is 0 (for wraparound)
+    if (current !== (previous + 1) % 10) {
       isSequential = false;
       break;
     }
