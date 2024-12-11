@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { TimeCard } from "@/components/TimeCard";
 import { CosmicTimeSection } from "@/components/CosmicTimeSection";
-import { Pi, Infinity, Binary, Clock, RefreshCcw, History } from "lucide-react";
+import { Pi, Infinity, Binary, Clock, RefreshCcw, History, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   calculatePhiTime,
@@ -11,13 +11,16 @@ import {
   calculateComplexTime,
   calculatePolarTime,
   calculateRecursionState,
-  detectPatterns
 } from "@/utils/timeCalculations";
+import { detectPatterns } from "@/utils/patterns/patternDetector";
+import { predictNextPatterns } from "@/utils/patterns/patternPredictor";
+import { TimePattern, PredictedPattern } from "@/utils/patterns/patternTypes";
 
 const Index = () => {
   const [time, setTime] = useState(new Date());
-  const [patterns, setPatterns] = useState<Array<{ name: string; timestamp: Date }>>([]);
-  const [patternHistory, setPatternHistory] = useState<Array<{ name: string; timestamp: Date }>>([]);
+  const [patterns, setPatterns] = useState<TimePattern[]>([]);
+  const [patternHistory, setPatternHistory] = useState<TimePattern[]>([]);
+  const [upcomingPatterns, setUpcomingPatterns] = useState<PredictedPattern[]>([]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -36,7 +39,15 @@ const Index = () => {
           return unique;
         });
       }
+
+      // Update upcoming patterns every minute
+      if (now.getSeconds() === 0) {
+        setUpcomingPatterns(predictNextPatterns(now));
+      }
     }, 1000);
+
+    // Initial prediction
+    setUpcomingPatterns(predictNextPatterns(new Date()));
 
     return () => clearInterval(timer);
   }, []);
@@ -125,40 +136,62 @@ const Index = () => {
           </TimeCard>
 
           {/* Pattern Detection Section */}
-        <TimeCard title="Mathematical Patterns" icon={<Infinity className="w-5 h-5" />} className="border-yellow-500/20">
-          <div className="space-y-2">
-            {patterns.map((pattern, index) => (
-              <div key={index} className="p-3 bg-accent/50 rounded-lg">
-                {pattern.name}
-              </div>
-            ))}
-          </div>
-        </TimeCard>
-
-        <TimeCard 
-          title="Temporal Mathematics Log" 
-          icon={<History className="w-5 h-5" />}
-          className="relative"
-        >
-          <Button
-            onClick={handleReset}
-            className="absolute top-6 right-6 text-muted-foreground hover:text-foreground"
-            variant="ghost"
-            size="icon"
+          <TimeCard 
+            title="Mathematical Patterns" 
+            icon={<Infinity className="w-5 h-5" />} 
+            className="border-yellow-500/20"
           >
-            <RefreshCcw className="w-4 h-4" />
-          </Button>
-          <div className="space-y-2">
-            {patternHistory.map((pattern, index) => (
-              <div key={index} className="flex justify-between items-center p-3 bg-accent/50 rounded-lg">
-                <span>{pattern.name}</span>
-                <span className="text-sm text-muted-foreground">
-                  {pattern.timestamp.toLocaleTimeString()}
-                </span>
-              </div>
-            ))}
-          </div>
-        </TimeCard>
+            <div className="space-y-2">
+              {patterns.map((pattern, index) => (
+                <div key={index} className="p-3 bg-accent/50 rounded-lg">
+                  {pattern.name}
+                </div>
+              ))}
+            </div>
+          </TimeCard>
+
+          {/* Upcoming Patterns Section */}
+          <TimeCard 
+            title="Upcoming Patterns" 
+            icon={<Calendar className="w-5 h-5" />} 
+            className="border-blue-500/20"
+          >
+            <div className="space-y-2 max-h-[200px] overflow-y-auto">
+              {upcomingPatterns.slice(0, 5).map((pattern, index) => (
+                <div key={index} className="p-3 bg-accent/50 rounded-lg">
+                  <div className="font-medium">{pattern.name}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {pattern.occurringAt.toLocaleTimeString()} - {pattern.description}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TimeCard>
+
+          <TimeCard 
+            title="Temporal Mathematics Log" 
+            icon={<History className="w-5 h-5" />}
+            className="relative"
+          >
+            <Button
+              onClick={handleReset}
+              className="absolute top-6 right-6 text-muted-foreground hover:text-foreground"
+              variant="ghost"
+              size="icon"
+            >
+              <RefreshCcw className="w-4 h-4" />
+            </Button>
+            <div className="space-y-2">
+              {patternHistory.map((pattern, index) => (
+                <div key={index} className="flex justify-between items-center p-3 bg-accent/50 rounded-lg">
+                  <span>{pattern.name}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {pattern.timestamp.toLocaleTimeString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </TimeCard>
         </div>
       </div>
     </div>
