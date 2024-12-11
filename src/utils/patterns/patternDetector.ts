@@ -46,17 +46,15 @@ export const detectPatterns = (date: Date): TimePattern[] => {
   const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   const digits = timeStr.split('');
   let isSequential = true;
+  let expectedNext = parseInt(digits[0]) + 1;
   
   for (let i = 1; i < digits.length; i++) {
     const current = parseInt(digits[i]);
-    const previous = parseInt(digits[i - 1]);
-    
-    // Check if the current digit is exactly one more than the previous
-    // or if previous is 9 and current is 0 (for wraparound)
-    if (current !== (previous + 1) % 10) {
+    if (current !== expectedNext % 10) {
       isSequential = false;
       break;
     }
+    expectedNext = current + 1;
   }
   
   if (isSequential) {
