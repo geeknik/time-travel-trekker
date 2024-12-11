@@ -31,7 +31,12 @@ export function TemporalMathematicsLog({ patterns, onReset }: TemporalMathematic
           >
             <span className="text-lg">{pattern.name}</span>
             <span className="text-muted-foreground">
-              {pattern.timestamp.toLocaleTimeString()}
+              {pattern.timestamp.toLocaleTimeString('en-US', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+              })}
             </span>
           </div>
         ))}
