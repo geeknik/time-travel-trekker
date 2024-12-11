@@ -16,6 +16,18 @@ export const calculateETime = (date: Date): string => {
   return eTime.toFixed(6);
 };
 
+export const calculateInternetTime = (date: Date): string => {
+  // Convert to BMT (Biel Mean Time)
+  const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+  const bmt = new Date(utc + (3600000 * 1)); // UTC+1 for BMT
+  
+  // Calculate .beats (Swatch Internet Time)
+  const secondsInDay = (bmt.getHours() * 3600) + (bmt.getMinutes() * 60) + bmt.getSeconds();
+  const beats = Math.floor((secondsInDay / 86400) * 1000);
+  
+  return `@${beats.toString().padStart(3, '0')}`;
+};
+
 export const calculateQuaternionTime = (date: Date): string => {
   const hours = date.getHours();
   const minutes = date.getMinutes();
