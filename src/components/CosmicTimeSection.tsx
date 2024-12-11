@@ -6,7 +6,25 @@ interface CosmicTimeSectionProps {
   time: Date;
 }
 
+const getLunarPhaseName = (phase: number): string => {
+  const phases = [
+    "New Moon 🌑",
+    "Waxing Crescent 🌒",
+    "First Quarter 🌓",
+    "Waxing Gibbous 🌔",
+    "Full Moon 🌕",
+    "Waning Gibbous 🌖",
+    "Last Quarter 🌗",
+    "Waning Crescent 🌘"
+  ];
+  return phases[phase];
+};
+
 export function CosmicTimeSection({ time }: CosmicTimeSectionProps) {
+  const lunarPhase = Math.floor(((time.getTime() / (29.5 * 24 * 60 * 60 * 1000)) % 1) * 8);
+  const phaseName = getLunarPhaseName(lunarPhase);
+  const phaseProgress = ((time.getTime() / (29.5 * 24 * 60 * 60 * 1000)) % 1) * 100;
+
   return (
     <>
       <TimeCard title="Earth Time" icon={<Timer className="w-5 h-5" />}>
@@ -47,9 +65,21 @@ export function CosmicTimeSection({ time }: CosmicTimeSectionProps) {
       </TimeCard>
 
       <TimeCard title="Lunar Phase" icon={<Moon className="w-5 h-5" />}>
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <div className="font-space text-4xl text-gray-400">
-            {Math.floor(((time.getTime() / (29.5 * 24 * 60 * 60 * 1000)) % 1) * 8)} / 8
+            {phaseName}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Phase {lunarPhase + 1} of 8
+          </div>
+          <div className="w-full bg-accent rounded-full h-2">
+            <div 
+              className="bg-gray-400 h-2 rounded-full transition-all duration-1000"
+              style={{ width: `${phaseProgress}%` }}
+            />
+          </div>
+          <div className="text-xs text-muted-foreground">
+            Lunar cycle: {Math.round(phaseProgress)}% complete
           </div>
         </div>
       </TimeCard>
