@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import { TimeCard } from "@/components/TimeCard";
 import { CosmicTimeSection } from "@/components/CosmicTimeSection";
-import { Pi, Clock, Binary } from "lucide-react";
+import { Pi, Clock } from "lucide-react";
 import {
   calculatePhiTime,
   calculatePiTime,
   calculateETime,
   calculateQuaternionTime,
-  calculateComplexTime,
-  calculatePolarTime,
-  calculateRecursionState,
 } from "@/utils/timeCalculations";
 import { detectPatterns } from "@/utils/patterns/patternDetector";
 import { predictNextPatterns } from "@/utils/patterns/patternPredictor";
@@ -64,15 +61,18 @@ const Index = () => {
         {/* Header */}
         <div className="text-center mb-12 animate-fade-up">
           <h1 className="text-4xl font-bold font-space mb-2">
-            Time Explorer
+            Cosmic Time Explorer
           </h1>
           <p className="text-muted-foreground">
-            Exploring time across cosmic and mathematical dimensions
+            Journey through cosmic dimensions and mathematical patterns of time
           </p>
         </div>
 
         {/* Main Grid */}
         <div className="grid md:grid-cols-2 gap-6">
+          {/* Cosmic Time Section */}
+          <CosmicTimeSection time={time} />
+
           {/* Mathematical Time Cards */}
           <TimeCard title="φ-time" icon={<Pi className="w-5 h-5" />}>
             <div className="text-center">
