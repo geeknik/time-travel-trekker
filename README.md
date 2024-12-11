@@ -54,6 +54,10 @@ npm run dev
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+## Privacy Policy
+
+Please review our [Privacy Policy](https://github.com/geeknik/geeknik/blob/main/PRIVACY.md) for information about how we handle your data.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
