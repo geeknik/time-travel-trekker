@@ -16,24 +16,30 @@ export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
     description: "Elite o'clock - Hacker's favorite time"
   });
 
-  // Predict next palindrome times
+  // Predict next palindrome times (including seconds)
   let checkDate = new Date(now);
   let found = 0;
-  while (found < 3) { // Find next 3 palindrome times
+  const maxChecks = 24 * 60 * 60; // Check up to 24 hours ahead
+  let checksPerformed = 0;
+  
+  while (found < 3 && checksPerformed < maxChecks) {
     const hours = checkDate.getHours().toString().padStart(2, '0');
     const minutes = checkDate.getMinutes().toString().padStart(2, '0');
-    const timeStr = hours + minutes;
+    const seconds = checkDate.getSeconds().toString().padStart(2, '0');
+    const timeStr = hours + minutes + seconds;
     
     if (timeStr === timeStr.split('').reverse().join('') && checkDate > now) {
       predictions.push({
         name: "Palindrome Time",
         occurringAt: new Date(checkDate),
-        description: `Time that reads the same forwards and backwards: ${hours}:${minutes}`
+        description: `Time that reads the same forwards and backwards: ${hours}:${minutes}:${seconds}`
       });
       found++;
     }
     
-    checkDate.setMinutes(checkDate.getMinutes() + 1);
+    // Increment by 1 second
+    checkDate.setSeconds(checkDate.getSeconds() + 1);
+    checksPerformed++;
   }
 
   // Predict next hex pattern times

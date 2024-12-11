@@ -4,19 +4,23 @@ export const detectPatterns = (date: Date): TimePattern[] => {
   const patterns: TimePattern[] = [];
   const hours = date.getHours();
   const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
   
   // Format time strings for pattern checking
-  const timeStr = `${hours.toString().padStart(2, '0')}${minutes.toString().padStart(2, '0')}`;
-  const hexTime = Number(timeStr).toString(16).toUpperCase();
+  const timeStr = `${hours.toString().padStart(2, '0')}${minutes.toString().padStart(2, '0')}${seconds.toString().padStart(2, '0')}`;
+  const hexTime = Number(`${hours}${minutes}`).toString(16).toUpperCase();
 
   // Leet time (13:37)
   if (hours === 13 && minutes === 37) {
     patterns.push({ name: "L337 Time (Elite o'clock)", timestamp: new Date() });
   }
 
-  // Palindrome time
+  // Palindrome time (including seconds)
   if (timeStr === timeStr.split('').reverse().join('')) {
-    patterns.push({ name: "Palindrome Time", timestamp: new Date() });
+    patterns.push({ 
+      name: `Palindrome Time (${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')})`, 
+      timestamp: new Date() 
+    });
   }
 
   // Binary patterns
