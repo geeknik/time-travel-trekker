@@ -26,6 +26,18 @@ export function LightTimeSection({ time: _ }: LightTimeSectionProps) {
                 <div className="text-purple-400">To Kuiper Belt: {calculateLightTime(SPACE_OBJECTS.KUIPER_BELT)}s</div>
                 <div className="text-pink-400">To Oort Cloud: {calculateLightTime(SPACE_OBJECTS.OORT_CLOUD)}s</div>
               </div>
+              
+              <div className="border-t border-gray-700 pt-2 mt-2">
+                <div className="text-xs text-muted-foreground mb-1">Lagrange Points</div>
+                <div className="grid grid-cols-2 gap-1 text-xs">
+                  <div className="text-emerald-400">L1: {calculateLightTime(LAGRANGE_POINTS.L1)}s</div>
+                  <div className="text-teal-400">L2: {calculateLightTime(LAGRANGE_POINTS.L2)}s</div>
+                  <div className="text-cyan-400">L3: {calculateLightTime(LAGRANGE_POINTS.L3)}s</div>
+                  <div className="text-sky-400">L4: {calculateLightTime(LAGRANGE_POINTS.L4)}s</div>
+                  <div className="text-indigo-400">L5: {calculateLightTime(LAGRANGE_POINTS.L5)}s</div>
+                </div>
+              </div>
+
               <div className="border-t border-gray-700 pt-2 mt-2">
                 <div className="text-xs text-muted-foreground mb-1">Space Probes</div>
                 <div className="flex items-center justify-center gap-2">
@@ -46,7 +58,7 @@ export function LightTimeSection({ time: _ }: LightTimeSectionProps) {
           <h4 className="text-sm font-semibold">Light Travel Times</h4>
           <p className="text-sm text-muted-foreground">
             Shows how long it takes light to travel to various celestial points, including 
-            deep space probes, the Asteroid Belt, and the mysterious Oort Cloud - the vast 
+            Lagrange points, deep space probes, the Asteroid Belt, and the mysterious Oort Cloud - the vast 
             region of icy objects at the edge of our solar system.
           </p>
         </div>
