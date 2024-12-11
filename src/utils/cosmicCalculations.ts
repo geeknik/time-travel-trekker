@@ -12,6 +12,15 @@ export const LAGRANGE_POINTS = {
   L5: 149600000, // Earth-Sun L5 (60° behind Earth)
 };
 
+// Distances in kilometers (approximate, changes over time)
+export const SPACE_OBJECTS = {
+  VOYAGER_1: 24000000000, // ~24 billion km from Earth
+  VOYAGER_2: 20000000000, // ~20 billion km from Earth
+  JUPITER: 628730000,     // Average distance
+  KUIPER_BELT: 7479893535, // Beginning of Kuiper Belt
+  OORT_CLOUD: 7479893535000 // Beginning of Oort Cloud
+};
+
 // Calculate Mars time (Sol)
 export const calculateMarsTime = (earthTime: Date) => {
   const marsDay = 24 * 60 * 60 * 1000 + 39 * 60 * 1000 + 35.244 * 1000;
@@ -44,4 +53,16 @@ export const calculateGalacticYearProgress = (date: Date) => {
   const galacticYear = 225000000; // years
   const currentYear = date.getFullYear();
   return ((currentYear % galacticYear) / galacticYear * 100).toFixed(10);
+};
+
+// Calculate Jovian Time (based on Jupiter's rotation period)
+export const calculateJovianTime = (earthTime: Date) => {
+  const jovianDay = 9.925 * 60 * 60 * 1000; // Jupiter's day in milliseconds
+  return ((earthTime.getTime() % jovianDay) / jovianDay * 24).toFixed(3);
+};
+
+// Calculate Asteroid Belt Time (based on average orbital period)
+export const calculateAsteroidBeltTime = (earthTime: Date) => {
+  const averageOrbitalPeriod = 4.6 * 365.25 * 24 * 60 * 60 * 1000; // ~4.6 years in ms
+  return ((earthTime.getTime() % averageOrbitalPeriod) / averageOrbitalPeriod * 100).toFixed(2);
 };
