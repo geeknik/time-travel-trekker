@@ -42,9 +42,17 @@ export const detectPatterns = (date: Date): TimePattern[] => {
     patterns.push({ name: "Repeating Digits Time", timestamp: new Date() });
   }
 
-  // Sequential digits
-  if (/01|12|23|34|45|56|78|89/.test(timeStr)) {
-    patterns.push({ name: "Sequential Time", timestamp: new Date() });
+  // Sequential digits (more precise detection)
+  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  const sequences = ['01', '12', '23', '34', '45', '56', '67', '78', '89'];
+  for (const seq of sequences) {
+    if (formattedTime.includes(seq)) {
+      patterns.push({ 
+        name: `Sequential Time (${formattedTime})`, 
+        timestamp: new Date() 
+      });
+      break; // Only report the first sequence found
+    }
   }
 
   return patterns;
