@@ -54,15 +54,19 @@ export const detectPatterns = (date: Date): TimePattern[] => {
     });
   }
 
-  // Geometric sequence check
-  const ratios = digits.slice(1).map((n, i) => n !== 0 && digits[i] !== 0 ? n / digits[i] : NaN);
-  if (new Set(ratios.filter(r => !isNaN(r))).size === 1) {
-    patterns.push({
-      name: "Geometric Sequence Time",
-      description: `Time digits form a geometric sequence with ratio ${ratios[0]}`,
-      timestamp: new Date(),
-      type: 'sequence'
-    });
+  // Geometric sequence check - improved to handle zeros
+  const nonZeroDigits = digits.filter(d => d !== 0);
+  if (nonZeroDigits.length > 2) {
+    const ratios = nonZeroDigits.slice(1).map((n, i) => n / nonZeroDigits[i]);
+    const uniqueRatios = new Set(ratios.map(r => r.toFixed(6))); // Handle floating point precision
+    if (uniqueRatios.size === 1 && !isNaN(ratios[0])) {
+      patterns.push({
+        name: "Geometric Sequence Time",
+        description: `Time digits form a geometric sequence with ratio ${ratios[0].toFixed(2)}`,
+        timestamp: new Date(),
+        type: 'sequence'
+      });
+    }
   }
 
   // Numerological patterns
