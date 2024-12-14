@@ -1,6 +1,6 @@
-import { TimePattern, isPerfectSquare, isTriangularNumber, isPentagonalNumber, 
-         isTimeSymmetric, isAstronomicalAlignment,
-         HEX_PATTERNS } from './patternTypes';
+import { TimePattern, isPerfectSquare, isTriangularNumber, isPentagonalNumber,
+         isTimeSymmetric, isAstronomicalAlignment, isFibonacciNumber, 
+         isPrime, isHarmonicNumber } from './patternTypes';
 
 export const detectPatterns = (date: Date): TimePattern[] => {
   const patterns: TimePattern[] = [];
@@ -10,38 +10,65 @@ export const detectPatterns = (date: Date): TimePattern[] => {
   
   // Format time strings for pattern checking
   const timeStr = `${hours.toString().padStart(2, '0')}${minutes.toString().padStart(2, '0')}${seconds.toString().padStart(2, '0')}`;
-  const hexTime = Number(`${hours}${minutes}`).toString(16).toUpperCase();
   const timeNumber = parseInt(timeStr);
 
-  // Mathematical patterns
+  // Mathematical patterns with enhanced descriptions
   if (isPerfectSquare(timeNumber)) {
     patterns.push({
       name: "Perfect Square Time",
-      description: `Time digits form a perfect square: ${Math.sqrt(timeNumber)}²`,
+      description: `Time digits form a perfect square: ${Math.sqrt(timeNumber)}² = ${timeNumber}`,
       timestamp: new Date(),
       type: 'mathematical'
     });
   }
 
   if (isTriangularNumber(timeNumber)) {
+    const n = Math.floor((-1 + Math.sqrt(1 + 8 * timeNumber)) / 2);
     patterns.push({
       name: "Triangular Number Time",
-      description: `Time digits form a triangular number`,
+      description: `Time forms the ${n}th triangular number: ${timeNumber}`,
       timestamp: new Date(),
-      type: 'mathematical'
+      type: 'sequence'
     });
   }
 
   if (isPentagonalNumber(timeNumber)) {
     patterns.push({
       name: "Pentagonal Number Time",
-      description: `Time digits form a pentagonal number`,
+      description: `Time forms a pentagonal number: ${timeNumber}`,
       timestamp: new Date(),
       type: 'mathematical'
     });
   }
 
-  // Complex sequence patterns
+  if (isFibonacciNumber(timeNumber)) {
+    patterns.push({
+      name: "Fibonacci Time",
+      description: `Current time matches a Fibonacci number in the sequence`,
+      timestamp: new Date(),
+      type: 'fibonacci'
+    });
+  }
+
+  if (isPrime(timeNumber)) {
+    patterns.push({
+      name: "Prime Time",
+      description: `Time forms a prime number: ${timeNumber}`,
+      timestamp: new Date(),
+      type: 'prime'
+    });
+  }
+
+  if (isHarmonicNumber(timeNumber)) {
+    patterns.push({
+      name: "Harmonic Time",
+      description: `Time corresponds to a harmonic number series sum`,
+      timestamp: new Date(),
+      type: 'harmonic'
+    });
+  }
+
+  // Sequence patterns
   const digits = timeStr.split('').map(Number);
   const differences = digits.slice(1).map((n, i) => n - digits[i]);
   
@@ -54,11 +81,11 @@ export const detectPatterns = (date: Date): TimePattern[] => {
     });
   }
 
-  // Geometric sequence check - improved to handle zeros
+  // Geometric sequence check
   const nonZeroDigits = digits.filter(d => d !== 0);
   if (nonZeroDigits.length > 2) {
     const ratios = nonZeroDigits.slice(1).map((n, i) => n / nonZeroDigits[i]);
-    const uniqueRatios = new Set(ratios.map(r => r.toFixed(6))); // Handle floating point precision
+    const uniqueRatios = new Set(ratios.map(r => r.toFixed(6)));
     if (uniqueRatios.size === 1 && !isNaN(ratios[0])) {
       patterns.push({
         name: "Geometric Sequence Time",
@@ -79,25 +106,32 @@ export const detectPatterns = (date: Date): TimePattern[] => {
     });
   }
 
-  // Astronomical alignments
+  // Astronomical patterns
   if (isAstronomicalAlignment(date)) {
+    const event = determineAstronomicalEvent(date);
     patterns.push({
       name: "Astronomical Alignment",
-      description: `Current time aligns with significant astronomical event`,
+      description: event,
       timestamp: new Date(),
       type: 'astronomical'
     });
   }
 
-  // Special hex patterns
-  if (HEX_PATTERNS[hexTime as keyof typeof HEX_PATTERNS]) {
-    patterns.push({
-      name: HEX_PATTERNS[hexTime as keyof typeof HEX_PATTERNS].name,
-      description: `Hexadecimal pattern: 0x${hexTime}`,
-      timestamp: new Date(),
-      type: 'special'
-    });
-  }
-
   return patterns;
 };
+
+function determineAstronomicalEvent(date: Date): string {
+  const month = date.getMonth();
+  const day = date.getDate();
+  
+  if (month === 2 && day === 20) return "Spring Equinox";
+  if (month === 8 && day === 22) return "Autumn Equinox";
+  if (month === 5 && day === 21) return "Summer Solstice";
+  if (month === 11 && day === 21) return "Winter Solstice";
+  if (month === 7 && day === 12) return "Perseids Meteor Shower Peak";
+  if (month === 11 && day === 17) return "Leonids Meteor Shower Peak";
+  if (month === 11 && day === 13) return "Geminids Meteor Shower Peak";
+  if (day === Math.round(29.5309 * (month % 2))) return "Full Moon";
+  
+  return "Celestial Alignment";
+}
