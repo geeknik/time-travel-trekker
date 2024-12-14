@@ -32,11 +32,14 @@ const Index = () => {
       if (newPatterns.length > 0) {
         setPatterns(newPatterns);
         setPatternHistory(prev => {
-          const combined = [...newPatterns, ...prev];
-          const unique = combined.filter((pattern, index, self) =>
-            index === self.findIndex(p => p.name === pattern.name)
-          ).slice(0, 10);
-          return unique;
+          // Filter out patterns that are currently active
+          const nonActivePatterns = prev.filter(historyPattern => 
+            !newPatterns.some(activePattern => activePattern.name === historyPattern.name)
+          );
+          
+          // Add new patterns that aren't already active
+          const combined = [...newPatterns, ...nonActivePatterns];
+          return combined.slice(0, 10); // Keep only the 10 most recent patterns
         });
       }
 
