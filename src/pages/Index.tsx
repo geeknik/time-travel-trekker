@@ -16,6 +16,31 @@ import { UpcomingPatternsCard } from "@/components/patterns/UpcomingPatternsCard
 import { TemporalMathematicsLog } from "@/components/patterns/TemporalMathematicsLog";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
+const isSignificantPattern = (pattern: TimePattern): boolean => {
+  // Define which patterns are considered significant enough to archive
+  switch (pattern.type) {
+    case 'mathematical':
+      // Only archive perfect squares and special mathematical sequences
+      return pattern.name.includes('Perfect Square') || 
+             pattern.name.includes('Golden Ratio');
+    case 'sequence':
+      // Only archive geometric and special sequences
+      return pattern.name.includes('Geometric') || 
+             pattern.name.includes('Fibonacci');
+    case 'special':
+      // All special patterns are significant
+      return true;
+    case 'astronomical':
+      // All astronomical alignments are significant
+      return true;
+    case 'numerological':
+      // Only archive powerful numerological numbers (1, 3, 7, 9)
+      return pattern.description?.includes('powerful');
+    default:
+      return false;
+  }
+};
+
 const Index = () => {
   const [time, setTime] = useState(new Date());
   const [patterns, setPatterns] = useState<TimePattern[]>([]);
@@ -37,9 +62,10 @@ const Index = () => {
             !newPatterns.some(activePattern => activePattern.name === historyPattern.name)
           );
           
-          // Add new patterns that aren't already active
-          const combined = [...newPatterns, ...nonActivePatterns];
-          return combined.slice(0, 10); // Keep only the 10 most recent patterns
+          // Only archive significant patterns that aren't already active
+          const significantNewPatterns = newPatterns.filter(isSignificantPattern);
+          const combined = [...significantNewPatterns, ...nonActivePatterns];
+          return combined.slice(0, 10); // Keep only the 10 most recent significant patterns
         });
       }
 
