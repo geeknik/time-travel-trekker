@@ -1,4 +1,4 @@
-import { PredictedPattern, HEX_PATTERNS } from './patternTypes';
+import { PredictedPattern, isTimeSymmetric, isAstronomicalAlignment } from './patternTypes';
 
 export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
   const predictions: PredictedPattern[] = [];
@@ -14,63 +14,57 @@ export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
     return next;
   };
 
-  // Predict next palindrome times
-  let checkDate = new Date(now);
-  let found = 0;
-  const maxChecks = 24 * 60 * 60;
-  let checksPerformed = 0;
-  
-  while (found < 3 && checksPerformed < maxChecks) {
-    const hours = checkDate.getHours().toString().padStart(2, '0');
-    const minutes = checkDate.getMinutes().toString().padStart(2, '0');
-    const seconds = checkDate.getSeconds().toString().padStart(2, '0');
-    const timeStr = hours + minutes + seconds;
-    
-    if (timeStr === timeStr.split('').reverse().join('') && checkDate > now) {
-      predictions.push({
-        name: "Palindrome Time",
-        occurringAt: new Date(checkDate),
-        description: `Time will read the same forwards and backwards: ${hours}:${minutes}:${seconds}`,
-        type: 'sequence'
-      });
-      found++;
-    }
-    
-    checkDate.setSeconds(checkDate.getSeconds() + 1);
-    checksPerformed++;
-  }
-
-  // Predict next special hex patterns
-  Object.entries(HEX_PATTERNS).forEach(([hex, { name, type }]) => {
-    const decimalTime = parseInt(hex, 16);
-    const hours = Math.floor(decimalTime / 100);
-    const minutes = decimalTime % 100;
-    
-    if (hours < 24 && minutes < 60) {
-      const nextHexTime = findNextOccurrence(hours, minutes, 0);
-      
-      predictions.push({
-        name,
-        occurringAt: nextHexTime,
-        description: `Hexadecimal pattern 0x${hex} will occur`,
-        type
-      });
-    }
-  });
-
-  // Predict next triple equal time
+  // Predict next perfect square times
   for (let h = 0; h < 24; h++) {
-    if (h >= now.getHours()) {
-      const nextTripleEqual = findNextOccurrence(h, h, h);
-      predictions.push({
-        name: "Triple Equal Time",
-        occurringAt: nextTripleEqual,
-        description: `All time units will be equal: ${h}:${h}:${h}`,
-        type: 'mathematical'
-      });
+    for (let m = 0; m < 60; m++) {
+      const timeNumber = parseInt(`${h.toString().padStart(2, '0')}${m.toString().padStart(2, '0')}00`);
+      if (Math.sqrt(timeNumber) % 1 === 0) {
+        const nextOccurrence = findNextOccurrence(h, m, 0);
+        if (nextOccurrence > now) {
+          predictions.push({
+            name: "Perfect Square Time",
+            occurringAt: nextOccurrence,
+            description: `Time will form perfect square: ${Math.sqrt(timeNumber)}²`,
+            type: 'mathematical'
+          });
+        }
+      }
     }
   }
 
-  // Sort predictions by occurrence time
-  return predictions.sort((a, b) => a.occurringAt.getTime() - b.occurringAt.getTime());
+  // Predict next symmetrical times
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m++) {
+      if (isTimeSymmetric(h, m, 0)) {
+        const nextOccurrence = findNextOccurrence(h, m, 0);
+        if (nextOccurrence > now) {
+          predictions.push({
+            name: "Time Mirror Pattern",
+            occurringAt: nextOccurrence,
+            description: `Time will read the same forwards and backwards`,
+            type: 'symmetry'
+          });
+        }
+      }
+    }
+  }
+
+  // Predict astronomical alignments
+  let checkDate = new Date(now);
+  for (let i = 0; i < 30; i++) {
+    if (isAstronomicalAlignment(checkDate)) {
+      predictions.push({
+        name: "Astronomical Alignment",
+        occurringAt: new Date(checkDate),
+        description: "Upcoming astronomical alignment event",
+        type: 'astronomical'
+      });
+    }
+    checkDate.setDate(checkDate.getDate() + 1);
+  }
+
+  // Sort predictions by occurrence time and limit to next 10 events
+  return predictions
+    .sort((a, b) => a.occurringAt.getTime() - b.occurringAt.getTime())
+    .slice(0, 10);
 };
