@@ -14,14 +14,19 @@ export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
     return next;
   };
 
+  // Helper function to format time for display
+  const formatTimeDisplay = (hours: number, minutes: number): string => {
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  };
+
   // Predict next perfect square times
   for (let h = 0; h < 24; h++) {
     for (let m = 0; m < 60; m++) {
-      // Format time as HHMM for checking perfect squares, ensuring valid time format
+      // Format time as HHMM for checking perfect squares
       const timeStr = h.toString().padStart(2, '0') + m.toString().padStart(2, '0');
       const timeNumber = parseInt(timeStr);
       
-      // Check if it's a perfect square and the resulting time is valid
+      // Check if it's a perfect square
       const sqrt = Math.sqrt(timeNumber);
       if (sqrt % 1 === 0 && h < 24 && m < 60) {
         const nextOccurrence = findNextOccurrence(h, m, 0);
@@ -29,7 +34,7 @@ export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
           predictions.push({
             name: "Perfect Square Time",
             occurringAt: nextOccurrence,
-            description: `Time will form perfect square: ${sqrt}²`,
+            description: `${formatTimeDisplay(h, m)} forms perfect square: ${sqrt}² = ${timeNumber}`,
             type: 'mathematical'
           });
         }
