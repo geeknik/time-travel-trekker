@@ -10,40 +10,75 @@ export const detectPatterns = (date: Date): TimePattern[] => {
   const timeStr = `${hours.toString().padStart(2, '0')}${minutes.toString().padStart(2, '0')}${seconds.toString().padStart(2, '0')}`;
   const hexTime = Number(`${hours}${minutes}`).toString(16).toUpperCase();
 
-  // Leet time (13:37)
-  if (hours === 13 && minutes === 37) {
-    patterns.push({ name: "L337 Time (Elite o'clock)", timestamp: new Date() });
+  // Mathematical patterns
+  if (hours === minutes && minutes === seconds) {
+    patterns.push({ 
+      name: "Triple Equal Time",
+      description: `All units equal: ${hours}:${minutes}:${seconds}`,
+      timestamp: new Date(),
+      type: 'mathematical'
+    });
   }
 
-  // Palindrome time (including seconds)
+  // Fibonacci sequence check (simplified)
+  const timeArray = [hours, minutes, seconds];
+  if (timeArray.every((num, i) => i < 2 || num === timeArray[i-1] + timeArray[i-2])) {
+    patterns.push({
+      name: "Fibonacci Time",
+      description: `Time units follow Fibonacci sequence`,
+      timestamp: new Date(),
+      type: 'mathematical'
+    });
+  }
+
+  // Prime number time
+  const isPrime = (num: number) => {
+    for(let i = 2; i <= Math.sqrt(num); i++)
+      if(num % i === 0) return false; 
+    return num > 1;
+  };
+
+  if ([hours, minutes, seconds].every(isPrime)) {
+    patterns.push({
+      name: "Prime Time",
+      description: "All time units are prime numbers",
+      timestamp: new Date(),
+      type: 'mathematical'
+    });
+  }
+
+  // Palindrome time
   if (timeStr === timeStr.split('').reverse().join('')) {
     patterns.push({ 
-      name: `Palindrome Time (${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')})`, 
-      timestamp: new Date() 
+      name: `Palindrome Time`,
+      description: `Time reads the same forwards and backwards: ${hours}:${minutes}:${seconds}`,
+      timestamp: new Date(),
+      type: 'sequence'
     });
   }
 
   // Binary patterns
   const binaryMinute = minutes.toString(2).padStart(6, '0');
   if (binaryMinute.match(/^1+$/) || binaryMinute.match(/^0+$/)) {
-    patterns.push({ name: `Binary Pattern: ${binaryMinute}`, timestamp: new Date() });
+    patterns.push({ 
+      name: `Binary Pattern: ${binaryMinute}`,
+      description: `Minutes in binary form a pattern`,
+      timestamp: new Date(),
+      type: 'sequence'
+    });
   }
 
   // Hex patterns
   if (HEX_PATTERNS[hexTime as keyof typeof HEX_PATTERNS]) {
     patterns.push({ 
-      name: `Hex ${HEX_PATTERNS[hexTime as keyof typeof HEX_PATTERNS]} (0x${hexTime})`, 
-      timestamp: new Date() 
+      name: HEX_PATTERNS[hexTime as keyof typeof HEX_PATTERNS].name,
+      description: `Hexadecimal pattern: 0x${hexTime}`,
+      timestamp: new Date(),
+      type: 'special'
     });
   }
 
-  // Repeating digits
-  if (new Set(timeStr).size === 1) {
-    patterns.push({ name: "Repeating Digits Time", timestamp: new Date() });
-  }
-
-  // Sequential time (checking for true sequential patterns like 12:34:56)
-  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  // Sequential time
   const digits = timeStr.split('');
   let isSequential = true;
   let expectedNext = parseInt(digits[0]) + 1;
@@ -59,8 +94,10 @@ export const detectPatterns = (date: Date): TimePattern[] => {
   
   if (isSequential) {
     patterns.push({ 
-      name: `Sequential Time (${formattedTime})`, 
-      timestamp: new Date() 
+      name: "Sequential Time",
+      description: `Time digits follow a sequence: ${hours}:${minutes}:${seconds}`,
+      timestamp: new Date(),
+      type: 'sequence'
     });
   }
 

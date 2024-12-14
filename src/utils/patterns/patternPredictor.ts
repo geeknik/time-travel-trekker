@@ -4,22 +4,20 @@ export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
   const predictions: PredictedPattern[] = [];
   const now = new Date(currentDate);
   
-  // Predict next L337 time
-  const nextL337 = new Date(now);
-  nextL337.setHours(13, 37, 0);
-  if (nextL337 <= now) {
-    nextL337.setDate(nextL337.getDate() + 1);
-  }
-  predictions.push({
-    name: "L337 Time",
-    occurringAt: nextL337,
-    description: "Elite o'clock - Hacker's favorite time",
-  });
+  // Helper function to find next occurrence of a specific time
+  const findNextOccurrence = (targetHours: number, targetMinutes: number, targetSeconds: number): Date => {
+    const next = new Date(now);
+    next.setHours(targetHours, targetMinutes, targetSeconds);
+    if (next <= now) {
+      next.setDate(next.getDate() + 1);
+    }
+    return next;
+  };
 
-  // Predict next palindrome times (including seconds)
+  // Predict next palindrome times
   let checkDate = new Date(now);
   let found = 0;
-  const maxChecks = 24 * 60 * 60; // Check up to 24 hours ahead
+  const maxChecks = 24 * 60 * 60;
   let checksPerformed = 0;
   
   while (found < 3 && checksPerformed < maxChecks) {
@@ -32,36 +30,46 @@ export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
       predictions.push({
         name: "Palindrome Time",
         occurringAt: new Date(checkDate),
-        description: `Time that reads the same forwards and backwards: ${hours}:${minutes}:${seconds}`
+        description: `Time will read the same forwards and backwards: ${hours}:${minutes}:${seconds}`,
+        type: 'sequence'
       });
       found++;
     }
     
-    // Increment by 1 second
     checkDate.setSeconds(checkDate.getSeconds() + 1);
     checksPerformed++;
   }
 
-  // Predict next hex pattern times
-  Object.entries(HEX_PATTERNS).forEach(([hex, description]) => {
+  // Predict next special hex patterns
+  Object.entries(HEX_PATTERNS).forEach(([hex, { name, type }]) => {
     const decimalTime = parseInt(hex, 16);
     const hours = Math.floor(decimalTime / 100);
     const minutes = decimalTime % 100;
     
     if (hours < 24 && minutes < 60) {
-      const nextHexTime = new Date(now);
-      nextHexTime.setHours(hours, minutes, 0);
-      if (nextHexTime <= now) {
-        nextHexTime.setDate(nextHexTime.getDate() + 1);
-      }
+      const nextHexTime = findNextOccurrence(hours, minutes, 0);
       
       predictions.push({
-        name: `${description}`,
+        name,
         occurringAt: nextHexTime,
-        description: `Hexadecimal pattern 0x${hex} occurs`
+        description: `Hexadecimal pattern 0x${hex} will occur`,
+        type
       });
     }
   });
+
+  // Predict next triple equal time
+  for (let h = 0; h < 24; h++) {
+    if (h >= now.getHours()) {
+      const nextTripleEqual = findNextOccurrence(h, h, h);
+      predictions.push({
+        name: "Triple Equal Time",
+        occurringAt: nextTripleEqual,
+        description: `All time units will be equal: ${h}:${h}:${h}`,
+        type: 'mathematical'
+      });
+    }
+  }
 
   // Sort predictions by occurrence time
   return predictions.sort((a, b) => a.occurringAt.getTime() - b.occurringAt.getTime());
