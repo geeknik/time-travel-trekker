@@ -8,14 +8,14 @@ interface LunarPhaseSectionProps {
 
 const getLunarPhaseName = (phase: number): string => {
   const phases = [
-    "New Moon 🌑",
-    "Waxing Crescent 🌒",
-    "First Quarter 🌓",
-    "Waxing Gibbous 🌔",
-    "Full Moon 🌕",
-    "Waning Gibbous 🌖",
-    "Last Quarter 🌗",
-    "Waning Crescent 🌘"
+    "New Moon",
+    "Waxing Crescent",
+    "First Quarter",
+    "Waxing Gibbous",
+    "Full Moon",
+    "Waning Gibbous",
+    "Last Quarter",
+    "Waning Crescent"
   ];
   return phases[phase];
 };
@@ -36,29 +36,31 @@ export function LunarPhaseSection({ time }: LunarPhaseSectionProps) {
       <HoverCardTrigger asChild>
         <div>
           <TimeCard title="Lunar Phase" icon={<Moon className="w-5 h-5" />}>
-            <div className="text-center space-y-4">
-              <div className="font-space text-4xl text-gray-400">
+            <div className="text-center space-y-6">
+              <div className="font-space text-5xl text-gray-400">
                 {phaseName}
               </div>
               
               {/* Large Moon Visualization */}
-              <div className="text-8xl my-6 animate-pulse">
+              <div className="text-9xl animate-pulse">
                 {moonEmoji}
               </div>
               
-              <div className="text-sm text-muted-foreground">
-                Phase {lunarPhase + 1} of 8
-              </div>
-              
-              <div className="space-y-2">
-                <div className="w-full bg-accent rounded-full h-2">
-                  <div 
-                    className="bg-gray-400 h-2 rounded-full transition-all duration-1000"
-                    style={{ width: `${phaseProgress}%` }}
-                  />
+              <div className="space-y-4">
+                <div className="text-sm text-muted-foreground">
+                  Phase {lunarPhase + 1} of 8
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  Lunar cycle: {Math.round(phaseProgress)}% complete
+                
+                <div className="space-y-2">
+                  <div className="w-full bg-accent rounded-full h-2">
+                    <div 
+                      className="bg-gray-400 h-2 rounded-full transition-all duration-1000"
+                      style={{ width: `${phaseProgress}%` }}
+                    />
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Lunar cycle: {Math.round(phaseProgress)}% complete
+                  </div>
                 </div>
               </div>
             </div>
