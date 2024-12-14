@@ -1,5 +1,5 @@
 import { TimePattern, isPerfectSquare, isTriangularNumber, isPentagonalNumber, 
-         calculateNumerologicalNumber, isTimeSymmetric, isAstronomicalAlignment,
+         isTimeSymmetric, isAstronomicalAlignment,
          HEX_PATTERNS } from './patternTypes';
 
 export const detectPatterns = (date: Date): TimePattern[] => {
@@ -67,17 +67,6 @@ export const detectPatterns = (date: Date): TimePattern[] => {
         type: 'sequence'
       });
     }
-  }
-
-  // Numerological patterns
-  const numerologicalNumber = calculateNumerologicalNumber(timeNumber);
-  if ([1, 3, 7, 9].includes(numerologicalNumber)) {
-    patterns.push({
-      name: "Numerological Power Time",
-      description: `Time reduces to powerful numerological number ${numerologicalNumber}`,
-      timestamp: new Date(),
-      type: 'numerological'
-    });
   }
 
   // Time symmetry patterns
