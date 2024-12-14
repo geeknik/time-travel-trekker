@@ -7,7 +7,7 @@ interface LightTimeSectionProps {
   time: Date;
 }
 
-export function LightTimeSection({ time: _ }: LightTimeSectionProps) {
+export function LightTimeSection({ time }: LightTimeSectionProps) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
@@ -42,11 +42,15 @@ export function LightTimeSection({ time: _ }: LightTimeSectionProps) {
                 <div className="text-xs text-muted-foreground mb-1">Space Probes</div>
                 <div className="flex items-center justify-center gap-2">
                   <Rocket className="w-4 h-4" />
-                  <span className="text-indigo-400">Voyager 1: {calculateLightTime(SPACE_OBJECTS.VOYAGER_1)}s</span>
+                  <span className="text-indigo-400">
+                    Voyager 1: {calculateLightTime(SPACE_OBJECTS.VOYAGER_1(time))}s
+                  </span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
                   <Rocket className="w-4 h-4" />
-                  <span className="text-cyan-400">Voyager 2: {calculateLightTime(SPACE_OBJECTS.VOYAGER_2)}s</span>
+                  <span className="text-cyan-400">
+                    Voyager 2: {calculateLightTime(SPACE_OBJECTS.VOYAGER_2(time))}s
+                  </span>
                 </div>
               </div>
             </div>
@@ -58,8 +62,9 @@ export function LightTimeSection({ time: _ }: LightTimeSectionProps) {
           <h4 className="text-sm font-semibold">Light Travel Times</h4>
           <p className="text-sm text-muted-foreground">
             Shows how long it takes light to travel to various celestial points, including 
-            Lagrange points, deep space probes, the Asteroid Belt, and the mysterious Oort Cloud - the vast 
-            region of icy objects at the edge of our solar system.
+            Lagrange points, deep space probes, the Asteroid Belt, and the mysterious Oort Cloud. 
+            The Voyager probes' distances update in real-time as they continue their journey 
+            into interstellar space.
           </p>
         </div>
       </HoverCardContent>

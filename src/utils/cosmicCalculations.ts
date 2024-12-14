@@ -12,13 +12,32 @@ export const LAGRANGE_POINTS = {
   L5: 149600000, // Earth-Sun L5 (60° behind Earth)
 };
 
+// Base distances in kilometers (approximate, as of 2024)
+const VOYAGER_BASE = {
+  VOYAGER_1_BASE: 24000000000, // ~24 billion km from Earth (as of 2024)
+  VOYAGER_2_BASE: 20000000000, // ~20 billion km from Earth (as of 2024)
+};
+
+// Voyager speeds in km/s
+const VOYAGER_SPEEDS = {
+  VOYAGER_1: 17, // ~17 km/s
+  VOYAGER_2: 15.8, // ~15.8 km/s
+};
+
+// Calculate current Voyager positions based on time
+const calculateVoyagerPosition = (baseDistance: number, speed: number, time: Date) => {
+  const launchDate = new Date('1977-09-05').getTime(); // Voyager 1 launch date
+  const secondsSinceLaunch = (time.getTime() - launchDate) / 1000;
+  return baseDistance + (speed * secondsSinceLaunch);
+};
+
 // Distances in kilometers (approximate, changes over time)
 export const SPACE_OBJECTS = {
-  VOYAGER_1: 24000000000, // ~24 billion km from Earth
-  VOYAGER_2: 20000000000, // ~20 billion km from Earth
   JUPITER: 628730000,     // Average distance
   KUIPER_BELT: 7479893535, // Beginning of Kuiper Belt
-  OORT_CLOUD: 7479893535000 // Beginning of Oort Cloud
+  OORT_CLOUD: 7479893535000, // Beginning of Oort Cloud
+  VOYAGER_1: (time: Date) => calculateVoyagerPosition(VOYAGER_BASE.VOYAGER_1_BASE, VOYAGER_SPEEDS.VOYAGER_1, time),
+  VOYAGER_2: (time: Date) => calculateVoyagerPosition(VOYAGER_BASE.VOYAGER_2_BASE, VOYAGER_SPEEDS.VOYAGER_2, time),
 };
 
 // Calculate Mars time (Sol)
