@@ -34,8 +34,8 @@ const isSignificantPattern = (pattern: TimePattern): boolean => {
       // All astronomical alignments are significant
       return true;
     case 'numerological':
-      // Only archive powerful numerological numbers (1, 3, 7, 9)
-      return pattern.description?.includes('powerful');
+      // Don't archive numerological patterns
+      return false;
     default:
       return false;
   }
