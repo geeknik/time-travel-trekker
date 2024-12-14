@@ -14,10 +14,13 @@ export const predictNextPatterns = (currentDate: Date): PredictedPattern[] => {
     return next;
   };
 
-  // Predict next perfect square times
+  // Predict next perfect square times (including single-digit hours)
   for (let h = 0; h < 24; h++) {
     for (let m = 0; m < 60; m++) {
-      const timeNumber = parseInt(`${h.toString().padStart(2, '0')}${m.toString().padStart(2, '0')}00`);
+      // Format time as HHMM for checking perfect squares
+      const timeStr = `${h.toString().padStart(2, '0')}${m.toString().padStart(2, '0')}`;
+      const timeNumber = parseInt(timeStr);
+      
       if (Math.sqrt(timeNumber) % 1 === 0) {
         const nextOccurrence = findNextOccurrence(h, m, 0);
         if (nextOccurrence > now) {
