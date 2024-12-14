@@ -65,7 +65,8 @@ export function FutureMilestonesCard({ currentTime }: FutureMilestonesCardProps)
 
   const calculateTimeUntil = (date: Date) => {
     const diffYears = (date.getTime() - currentTime.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
-    return `${Math.max(0, diffYears.toFixed(1))} years`;
+    const years = Math.max(0, Number(diffYears.toFixed(1)));
+    return `${years} years`;
   };
 
   return (
