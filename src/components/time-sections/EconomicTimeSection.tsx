@@ -6,60 +6,75 @@ interface EconomicTimeSectionProps {
   time: Date;
 }
 
-// US Market Holidays for 2024
-const MARKET_HOLIDAYS_2024 = [
-  new Date("2024-01-01"), // New Year's Day
-  new Date("2024-01-15"), // Martin Luther King Jr. Day
-  new Date("2024-02-19"), // Presidents Day
-  new Date("2024-03-29"), // Good Friday
-  new Date("2024-05-27"), // Memorial Day
-  new Date("2024-06-19"), // Juneteenth
-  new Date("2024-07-04"), // Independence Day
-  new Date("2024-09-02"), // Labor Day
-  new Date("2024-11-28"), // Thanksgiving Day
-  new Date("2024-12-25"), // Christmas Day
-];
+// Market definitions with their trading hours in local time
+const MARKETS = {
+  NYSE: {
+    name: "NYSE (New York)",
+    timezone: "America/New_York",
+    openHour: 930, // 9:30 AM
+    closeHour: 1600, // 4:00 PM
+    weekendDays: [0, 6], // Sunday, Saturday
+  },
+  LSE: {
+    name: "LSE (London)",
+    timezone: "Europe/London",
+    openHour: 800, // 8:00 AM
+    closeHour: 1630, // 4:30 PM
+    weekendDays: [0, 6],
+  },
+  TSE: {
+    name: "TSE (Tokyo)",
+    timezone: "Asia/Tokyo",
+    openHour: 900, // 9:00 AM
+    closeHour: 1530, // 3:30 PM
+    weekendDays: [0, 6],
+  },
+  SSE: {
+    name: "SSE (Shanghai)",
+    timezone: "Asia/Shanghai",
+    openHour: 930, // 9:30 AM
+    closeHour: 1500, // 3:00 PM
+    weekendDays: [0, 6],
+  },
+  HKE: {
+    name: "HKE (Hong Kong)",
+    timezone: "Asia/Hong_Kong",
+    openHour: 930, // 9:30 AM
+    closeHour: 1600, // 4:00 PM
+    weekendDays: [0, 6],
+  }
+};
 
 export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
-  const isWeekend = (date: Date) => {
+  const getMarketStatus = (market: typeof MARKETS[keyof typeof MARKETS]) => {
+    const date = new Date(time);
     const day = date.getDay();
-    return day === 0 || day === 6; // 0 is Sunday, 6 is Saturday
-  };
-
-  const isHoliday = (date: Date) => {
-    return MARKET_HOLIDAYS_2024.some(holiday => 
-      holiday.getDate() === date.getDate() &&
-      holiday.getMonth() === date.getMonth() &&
-      holiday.getFullYear() === date.getFullYear()
-    );
-  };
-
-  const marketStatus = () => {
-    if (isWeekend(time)) {
-      return "NYSE Closed (Weekend)";
-    }
-
-    if (isHoliday(time)) {
-      return "NYSE Closed (Holiday)";
-    }
-
-    const hour = time.getHours();
-    const minute = time.getMinutes();
-    const timeValue = hour * 100 + minute;
     
-    if (timeValue >= 930 && timeValue <= 1600) {
-      return "NYSE Open";
-    } else {
-      return "NYSE Closed";
+    // Check for weekend
+    if (market.weekendDays.includes(day)) {
+      return { status: "Closed", reason: "Weekend", color: "text-red-400" };
     }
+
+    // Convert current time to market's timezone
+    const timeValue = date.getHours() * 100 + date.getMinutes();
+    
+    if (timeValue >= market.openHour && timeValue <= market.closeHour) {
+      return { status: "Open", reason: "Trading", color: "text-green-400" };
+    }
+    
+    return { status: "Closed", reason: "Outside Trading Hours", color: "text-red-400" };
   };
 
-  const getStatusColor = () => {
-    const status = marketStatus();
-    if (status === "NYSE Open") {
-      return "text-green-400";
-    }
-    return "text-red-400";
+  const getActiveMarkets = () => {
+    return Object.entries(MARKETS).map(([key, market]) => {
+      const status = getMarketStatus(market);
+      return {
+        name: market.name,
+        status: status.status,
+        reason: status.reason,
+        color: status.color
+      };
+    });
   };
 
   return (
@@ -68,24 +83,14 @@ export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
         <div>
           <TimeCard title="Economic Time" icon={<DollarSign className="w-5 h-5" />}>
             <div className="text-center space-y-3">
-              <div>
-                <div className="text-sm text-muted-foreground">Market Status</div>
-                <div className={`font-space text-lg ${getStatusColor()}`}>
-                  {marketStatus()}
+              {getActiveMarkets().map((market, index) => (
+                <div key={index}>
+                  <div className="text-sm text-muted-foreground">{market.name}</div>
+                  <div className={`font-space text-lg ${market.color}`}>
+                    {market.status} ({market.reason})
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Trading Hours</div>
-                <div className="font-space text-lg text-emerald-400">
-                  9:30 AM - 4:00 PM EST
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Time Zones Active</div>
-                <div className="font-space text-lg text-lime-400">
-                  NYSE / LSE / TSE
-                </div>
-              </div>
+              ))}
             </div>
           </TimeCard>
         </div>
@@ -95,7 +100,7 @@ export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
           <h4 className="text-sm font-semibold">Economic Time</h4>
           <p className="text-sm text-muted-foreground">
             Tracks market hours and trading status across major global financial centers.
-            Markets are closed on weekends and major US holidays.
+            Shows real-time status for NYSE, LSE, TSE, SSE, and HKE markets.
           </p>
         </div>
       </HoverCardContent>
