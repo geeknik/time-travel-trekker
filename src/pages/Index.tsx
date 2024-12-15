@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CosmicTimeSection } from "@/components/CosmicTimeSection";
 import { MathematicalTimeSection } from "@/components/MathematicalTimeSection";
+import { BlockchainTimeSection } from "@/components/time-sections/BlockchainTimeSection";
 import { detectPatterns } from "@/utils/patterns/patternDetector";
 import { predictNextPatterns } from "@/utils/patterns/patternPredictor";
 import { TimePattern, PredictedPattern } from "@/utils/patterns/patternTypes";
@@ -93,6 +94,9 @@ const Index = () => {
 
           {/* Mathematical Time Section */}
           <MathematicalTimeSection time={time} />
+
+          {/* Blockchain Time Section */}
+          <BlockchainTimeSection time={time} />
 
           {/* Pattern Detection Section */}
           <MathematicalPatternsCard patterns={patterns} />
