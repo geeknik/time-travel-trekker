@@ -41,8 +41,11 @@ export function LunarPhaseSection({ time }: LunarPhaseSectionProps) {
                 {phaseName}
               </div>
               
-              {/* Large Moon Visualization */}
-              <div className="text-9xl animate-pulse">
+              {/* Large Moon Visualization with subtle hover animation */}
+              <div 
+                className="text-9xl transition-transform duration-1000 hover:scale-110 cursor-pointer"
+                title="Current lunar phase"
+              >
                 {moonEmoji}
               </div>
               
