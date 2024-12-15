@@ -22,7 +22,9 @@ export function LightTimeSection({ time }: LightTimeSectionProps) {
               </div>
               <div className="space-y-1 mt-2 text-sm">
                 <div className="text-blue-400">To Jupiter: {calculateLightTime(SPACE_OBJECTS.JUPITER)}s</div>
-                <div className="text-green-400">To Asteroid Belt: {calculateLightTime(SPACE_OBJECTS.KUIPER_BELT / 2)}s</div>
+                <div className="text-green-400">
+                  To Asteroid Belt: {calculateLightTime(SPACE_OBJECTS.ASTEROID_BELT.INNER)}s - {calculateLightTime(SPACE_OBJECTS.ASTEROID_BELT.OUTER)}s
+                </div>
                 <div className="text-purple-400">To Kuiper Belt: {calculateLightTime(SPACE_OBJECTS.KUIPER_BELT)}s</div>
                 <div className="text-pink-400">To Oort Cloud: {calculateLightTime(SPACE_OBJECTS.OORT_CLOUD)}s</div>
               </div>

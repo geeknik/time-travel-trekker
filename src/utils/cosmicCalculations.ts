@@ -31,11 +31,15 @@ const calculateVoyagerPosition = (baseDistance: number, speed: number, time: Dat
   return baseDistance + (speed * secondsSinceLaunch);
 };
 
-// Distances in kilometers (approximate, changes over time)
+// Distances in kilometers (approximate, updated with correct astronomical distances)
 export const SPACE_OBJECTS = {
-  JUPITER: 628730000,     // Average distance
-  KUIPER_BELT: 7479893535, // Beginning of Kuiper Belt
-  OORT_CLOUD: 7479893535000, // Beginning of Oort Cloud
+  JUPITER: 628730000,     // Average distance from Earth to Jupiter
+  ASTEROID_BELT: {
+    INNER: 329115316,     // Inner edge (~2.2 AU)
+    OUTER: 478713186,     // Outer edge (~3.2 AU)
+  },
+  KUIPER_BELT: 4474341000, // Beginning of Kuiper Belt (~30 AU)
+  OORT_CLOUD: 14914470000000, // Beginning of Oort Cloud (~100,000 AU)
   VOYAGER_1: (time: Date) => calculateVoyagerPosition(VOYAGER_BASE.VOYAGER_1_BASE, VOYAGER_SPEEDS.VOYAGER_1, time),
   VOYAGER_2: (time: Date) => calculateVoyagerPosition(VOYAGER_BASE.VOYAGER_2_BASE, VOYAGER_SPEEDS.VOYAGER_2, time),
 };
