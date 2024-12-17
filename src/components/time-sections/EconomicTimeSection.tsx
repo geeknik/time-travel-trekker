@@ -47,7 +47,7 @@ const MARKETS = {
 
 export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
   const getMarketStatus = (market: typeof MARKETS[keyof typeof MARKETS]) => {
-    // Convert the input time to the market's timezone
+    // Get the local time in the market's timezone
     const marketTime = new Date(time.toLocaleString('en-US', { timeZone: market.timezone }));
     const day = marketTime.getDay();
     
@@ -56,7 +56,7 @@ export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
       return { status: "Closed", reason: "Weekend", color: "text-red-400" };
     }
 
-    // Get time value in market's timezone
+    // Get local time value in market's timezone
     const hours = marketTime.getHours();
     const minutes = marketTime.getMinutes();
     const timeValue = hours * 100 + minutes;
@@ -74,7 +74,7 @@ export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
       const marketTime = new Date(time.toLocaleString('en-US', { timeZone: market.timezone }));
       const timeString = marketTime.toLocaleTimeString('en-US', { 
         hour: '2-digit', 
-        minute: '2-digit', 
+        minute: '2-digit',
         hour12: true,
         timeZone: market.timezone 
       });
