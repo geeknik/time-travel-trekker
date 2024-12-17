@@ -47,16 +47,19 @@ const MARKETS = {
 
 export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
   const getMarketStatus = (market: typeof MARKETS[keyof typeof MARKETS]) => {
-    const date = new Date(time);
-    const day = date.getDay();
+    // Convert the input time to the market's timezone
+    const marketTime = new Date(time.toLocaleString('en-US', { timeZone: market.timezone }));
+    const day = marketTime.getDay();
     
     // Check for weekend
     if (market.weekendDays.includes(day)) {
       return { status: "Closed", reason: "Weekend", color: "text-red-400" };
     }
 
-    // Convert current time to market's timezone
-    const timeValue = date.getHours() * 100 + date.getMinutes();
+    // Get time value in market's timezone
+    const hours = marketTime.getHours();
+    const minutes = marketTime.getMinutes();
+    const timeValue = hours * 100 + minutes;
     
     if (timeValue >= market.openHour && timeValue <= market.closeHour) {
       return { status: "Open", reason: "Trading", color: "text-green-400" };
@@ -68,11 +71,20 @@ export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
   const getActiveMarkets = () => {
     return Object.entries(MARKETS).map(([key, market]) => {
       const status = getMarketStatus(market);
+      const marketTime = new Date(time.toLocaleString('en-US', { timeZone: market.timezone }));
+      const timeString = marketTime.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true,
+        timeZone: market.timezone 
+      });
+      
       return {
         name: market.name,
         status: status.status,
         reason: status.reason,
-        color: status.color
+        color: status.color,
+        localTime: timeString
       };
     });
   };
@@ -85,7 +97,9 @@ export function EconomicTimeSection({ time }: EconomicTimeSectionProps) {
             <div className="text-center space-y-3">
               {getActiveMarkets().map((market, index) => (
                 <div key={index}>
-                  <div className="text-sm text-muted-foreground">{market.name}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {market.name} ({market.localTime})
+                  </div>
                   <div className={`font-space text-lg ${market.color}`}>
                     {market.status} ({market.reason})
                   </div>
