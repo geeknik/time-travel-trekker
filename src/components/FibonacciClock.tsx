@@ -31,7 +31,7 @@ export function FibonacciClock({ time }: { time: Date }) {
 
   useEffect(() => {
     const hours = time.getHours() % 12 || 12; // Convert to 12-hour format
-    const minutes = Math.floor(time.getMinutes() / 5); // Convert minutes to 5-minute blocks
+    const minutes = Math.floor(time.getMinutes() / 5); // Convert minutes to 5-minute blocks (0-11)
 
     // Reset colors
     const newSquares = squares.map(square => ({ ...square, color: 'bg-transparent' }));
@@ -40,19 +40,25 @@ export function FibonacciClock({ time }: { time: Date }) {
     let remainingHours = hours;
     let remainingMinutes = minutes;
 
-    newSquares.forEach((square, index) => {
+    // Sort squares by value in descending order for greedy allocation
+    const sortedSquareIndices = [...newSquares.keys()].sort(
+      (a, b) => newSquares[b].value - newSquares[a].value
+    );
+
+    for (const index of sortedSquareIndices) {
+      const square = newSquares[index];
       if (remainingHours >= square.value && remainingMinutes >= square.value) {
-        newSquares[index].color = 'bg-blue-400/60'; // Both hours and minutes
+        newSquares[index].color = 'bg-blue-500/60'; // Both hours and minutes
         remainingHours -= square.value;
         remainingMinutes -= square.value;
       } else if (remainingHours >= square.value) {
-        newSquares[index].color = 'bg-red-400/60'; // Hours only
+        newSquares[index].color = 'bg-red-500/60'; // Hours only
         remainingHours -= square.value;
       } else if (remainingMinutes >= square.value) {
-        newSquares[index].color = 'bg-green-400/60'; // Minutes only
+        newSquares[index].color = 'bg-green-500/60'; // Minutes only
         remainingMinutes -= square.value;
       }
-    });
+    }
 
     setSquares(newSquares);
   }, [time]);
