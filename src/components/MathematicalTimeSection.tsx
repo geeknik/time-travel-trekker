@@ -1,6 +1,7 @@
 import { TimeCard } from "@/components/TimeCard";
 import { Pi, Clock } from "lucide-react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { FibonacciClock } from "@/components/FibonacciClock";
 import {
   calculatePhiTime,
   calculatePiTime,
@@ -15,6 +16,8 @@ interface MathematicalTimeSectionProps {
 export function MathematicalTimeSection({ time }: MathematicalTimeSectionProps) {
   return (
     <>
+      <FibonacciClock time={time} />
+      
       <HoverCard>
         <HoverCardTrigger asChild>
           <div>
