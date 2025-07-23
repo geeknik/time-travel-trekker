@@ -11,6 +11,11 @@ import { GeologicalTimeSection } from "./time-sections/GeologicalTimeSection";
 import { DigitalTimeSection } from "./time-sections/DigitalTimeSection";
 import { MusicalTimeSection } from "./time-sections/MusicalTimeSection";
 import { EconomicTimeSection } from "./time-sections/EconomicTimeSection";
+import { ParticlePhysicsTimeSection } from "./time-sections/ParticlePhysicsTimeSection";
+import { StellarEvolutionTimeSection } from "./time-sections/StellarEvolutionTimeSection";
+import { ExoplanetTimeSection } from "./time-sections/ExoplanetTimeSection";
+import { OceanTimeSection } from "./time-sections/OceanTimeSection";
+import { BlockchainTimeSection } from "./time-sections/BlockchainTimeSection";
 
 interface CosmicTimeSectionProps {
   time: Date;
@@ -24,11 +29,16 @@ export function CosmicTimeSection({ time }: CosmicTimeSectionProps) {
       <LightTimeSection time={time} />
       <LunarPhaseSection time={time} />
       <QuantumTimeSection time={time} />
+      <ParticlePhysicsTimeSection time={time} />
+      <StellarEvolutionTimeSection time={time} />
+      <ExoplanetTimeSection time={time} />
+      <OceanTimeSection time={time} />
       <BiologicalTimeSection time={time} />
       <GeologicalTimeSection time={time} />
       <DigitalTimeSection time={time} />
       <MusicalTimeSection time={time} />
       <EconomicTimeSection time={time} />
+      <BlockchainTimeSection time={time} />
       <AlternativeTimeSection time={time} />
       <ProgrammerTimeSection time={time} />
       <AstronomicalTimeSection time={time} />
